@@ -288,24 +288,17 @@
                                                         multiplier:1.0f
                                                           constant:0.0f]];
         
-        CGFloat alertBackgroundViewWidth = MIN(CGRectGetWidth([UIApplication sharedApplication].keyWindow.bounds),
-                                               CGRectGetHeight([UIApplication sharedApplication].keyWindow.bounds)) * 0.8f;
-        
-        if (alertBackgroundViewWidth > self.maximumWidth) {
-            alertBackgroundViewWidth = self.maximumWidth;
-        }
-        
         _alertBackgroundWidthConstraint = [NSLayoutConstraint constraintWithItem:self.alertBackgroundView
                                                                        attribute:NSLayoutAttributeWidth
                                                                        relatedBy:NSLayoutRelationEqual
                                                                           toItem:nil
                                                                        attribute:NSLayoutAttributeNotAnAttribute
                                                                       multiplier:0.0f
-                                                                        constant:alertBackgroundViewWidth];
+                                                                        constant:0];
         
         [self addConstraint:self.alertBackgroundWidthConstraint];
         
-        _backgroundViewVerticalCenteringConstraint = [NSLayoutConstraint constraintWithItem:self.alertBackgroundView
+        self.backgroundViewVerticalCenteringConstraint = [NSLayoutConstraint constraintWithItem:self.alertBackgroundView
                                                                                   attribute:NSLayoutAttributeCenterY
                                                                                   relatedBy:NSLayoutRelationEqual
                                                                                      toItem:self
@@ -313,7 +306,6 @@
                                                                                  multiplier:1.0f
                                                                                    constant:0.0f];
         
-        [self addConstraint:self.backgroundViewVerticalCenteringConstraint];
         
         [self addConstraint:[NSLayoutConstraint constraintWithItem:self.alertBackgroundView
                                                          attribute:NSLayoutAttributeHeight
@@ -372,6 +364,66 @@
     
     return NO;
 }
+
+- (void)setBackgroundViewVerticalCenteringConstraint:(NSLayoutConstraint *)backgroundViewVerticalCenteringConstraint {
+    if (_backgroundViewVerticalCenteringConstraint) {
+        [self removeConstraint: _backgroundViewVerticalCenteringConstraint];
+    }
+    _backgroundViewVerticalCenteringConstraint = backgroundViewVerticalCenteringConstraint;
+    if (_backgroundViewVerticalCenteringConstraint) {
+        [self addConstraint: _backgroundViewVerticalCenteringConstraint];
+    }
+}
+
+- (NSLayoutAttribute)verticalAlignmentAttribute {
+    return self.backgroundViewVerticalCenteringConstraint.firstAttribute;
+}
+
+- (void)setVerticalAlignmentAttribute:(NSLayoutAttribute)verticalAlignmentAttribute {
+    
+    if (self.verticalAlignmentAttribute != verticalAlignmentAttribute) {
+        CGFloat offset = 0;
+        switch (verticalAlignmentAttribute) {
+            case NSLayoutAttributeBottom:
+                offset = -8;
+                break;
+            case NSLayoutAttributeTop:
+                offset = 8;
+                break;
+            case NSLayoutAttributeCenterY:
+                offset = 0;
+                break;
+            default:
+                NSAssert(NO, @"verticalAlignmentAttribute must be a vertical attribute.");
+                break;
+        }
+        self.backgroundViewVerticalCenteringConstraint =
+        [NSLayoutConstraint constraintWithItem:self.alertBackgroundView
+                                     attribute:verticalAlignmentAttribute
+                                     relatedBy:NSLayoutRelationEqual
+                                        toItem:self
+                                     attribute:verticalAlignmentAttribute
+                                    multiplier:1.0f
+                                      constant:offset];
+        
+    }
+    
+    CGRect windowBounds = [UIApplication sharedApplication].keyWindow.bounds;
+    CGFloat alertBackgroundViewWidth = MIN(CGRectGetWidth(windowBounds),
+                                           CGRectGetHeight(windowBounds));
+    if (verticalAlignmentAttribute == NSLayoutAttributeBottom) {
+        alertBackgroundViewWidth -= 16.0f;
+    } else {
+        alertBackgroundViewWidth *= 0.8f;
+    }
+    
+    if (alertBackgroundViewWidth > self.maximumWidth) {
+        alertBackgroundViewWidth = self.maximumWidth;
+    }
+    
+    _alertBackgroundWidthConstraint.constant = alertBackgroundViewWidth;
+}
+
 
 - (void)setMaximumWidth:(CGFloat)maximumWidth {
     _maximumWidth = maximumWidth;

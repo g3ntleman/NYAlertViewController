@@ -195,14 +195,14 @@ static NSString * const kTableViewCellReuseIdentifier = @"kTableViewCellReuseIde
     alertViewController.title = NSLocalizedString(@"Content View", nil);
     alertViewController.message = NSLocalizedString(@"Set the alertViewContentView property to add custom views to the alert view", nil);
     
-    [alertViewController addAction:[NYAlertAction actionWithTitle:NSLocalizedString(@"Select", nil)
-                                                            style:UIAlertActionStyleDefault
+    [alertViewController addAction:[NYAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil)
+                                                            style:UIAlertActionStyleCancel
                                                           handler:^(NYAlertAction *action) {
                                                               [self dismissViewControllerAnimated:YES completion:nil];
                                                           }]];
     
-    [alertViewController addAction:[NYAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil)
-                                                            style:UIAlertActionStyleCancel
+    [alertViewController addAction:[NYAlertAction actionWithTitle:NSLocalizedString(@"Select", nil)
+                                                            style:UIAlertActionStyleDefault
                                                           handler:^(NYAlertAction *action) {
                                                               [self dismissViewControllerAnimated:YES completion:nil];
                                                           }]];
@@ -210,7 +210,8 @@ static NSString * const kTableViewCellReuseIdentifier = @"kTableViewCellReuseIde
     UIDatePicker *datePicker = [[UIDatePicker alloc] init];
     
     alertViewController.alertViewContentView = datePicker;
-    
+    alertViewController.transitionStyle = NYAlertViewControllerTransitionStyleSlideFromBottom;
+
     [self presentViewController:alertViewController animated:YES completion:nil];
 }
 

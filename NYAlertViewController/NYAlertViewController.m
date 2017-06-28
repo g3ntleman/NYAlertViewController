@@ -366,11 +366,11 @@ static CGFloat const kDefaultDismissalAnimationDuration = 0.6f;
     
     _buttonCornerRadius = 6.0f;
     
-    _transitionStyle = NYAlertViewControllerTransitionStyleSlideFromTop;
     
     self.modalPresentationStyle = UIModalPresentationCustom;
     self.transitioningDelegate = self;
-    
+    self.transitionStyle = NYAlertViewControllerTransitionStyleSlideFromTop;
+
     self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureRecognized:)];
     self.panGestureRecognizer.delegate = self;
     self.panGestureRecognizer.enabled = NO;
@@ -379,6 +379,11 @@ static CGFloat const kDefaultDismissalAnimationDuration = 0.6f;
 
 - (void)loadView {
     self.view = [[NYAlertView alloc] initWithFrame:CGRectZero];
+}
+
+- (void)setTransitionStyle:(NYAlertViewControllerTransitionStyle)transitionStyle {
+    _transitionStyle = transitionStyle;
+    self.view.verticalAlignmentAttribute = _transitionStyle == NYAlertViewControllerTransitionStyleSlideFromBottom ? NSLayoutAttributeBottom : NSLayoutAttributeCenterY;
 }
 
 - (BOOL)prefersStatusBarHidden {

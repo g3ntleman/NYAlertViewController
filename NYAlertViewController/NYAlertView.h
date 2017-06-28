@@ -50,6 +50,8 @@ typedef NS_ENUM(NSInteger, NYAlertViewButtonType) {
 
 @property (nonatomic, readonly) NSLayoutConstraint *backgroundViewVerticalCenteringConstraint;
 
+@property (nonatomic) NSLayoutAttribute verticalAlignmentAttribute;
+
 //@property (nonatomic) NSArray *actions;
 @property (nonatomic) NSArray *actionButtons;
 
